@@ -30,6 +30,11 @@ Database: PostgreSQL (with GORM ORM)
 
 Authentication: JWT
 
+System Design ✅
+Database Design ✅
+Export Postman ✅
+Export DB ✅
+
 System Design 
 <img width="1041" height="491" alt="System Design Test" src="https://github.com/user-attachments/assets/0d0197ae-5f6f-431f-9a07-0c52f3c2752f" />
 Database Design
