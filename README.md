@@ -1,6 +1,6 @@
 📌 Project Description
 
-This project is a Public Transportation E-Ticketing API built with Golang and PostgreSQL as part of a backend engineering skill test.
+This project is a Public Transportation E-Ticketing API built with Golang and PostgreSQL as part of a backend engineering.
 
 The system implements:
 
@@ -26,14 +26,19 @@ PostgreSQL database integration with GORM.
 
 Language: Go (Golang)
 
-Framework: Gin
-
 Database: PostgreSQL (with GORM ORM)
 
 Authentication: JWT
 
+System Design 
+<img width="1041" height="491" alt="System Design Test" src="https://github.com/user-attachments/assets/0d0197ae-5f6f-431f-9a07-0c52f3c2752f" />
+Database Design
+<img width="887" height="705" alt="Database Design test" src="https://github.com/user-attachments/assets/acdc0625-6ece-46e0-8a12-ea757b60f53a" />
 
+Login With Token
 ![Bukti Login with token](https://github.com/user-attachments/assets/e30da79d-611b-4d59-b5d8-9156e74c614c)
+Auth from JWT
+![Bukti Auth token from JWT](https://github.com/user-attachments/assets/6ca9a82e-bf9d-4c52-98fc-8c144650d779)
 
 
 
