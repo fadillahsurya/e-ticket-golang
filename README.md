@@ -33,4 +33,8 @@ Database: PostgreSQL (with GORM ORM)
 Authentication: JWT
 
 
+![Bukti Login with token](https://github.com/user-attachments/assets/e30da79d-611b-4d59-b5d8-9156e74c614c)
+
+
+
 
