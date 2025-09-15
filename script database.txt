@@ -1,0 +1,78 @@
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    password_hash TEXT NOT NULL,
+    role VARCHAR(20) DEFAULT 'operator',
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE cards (
+    id SERIAL PRIMARY KEY,
+    card_uid VARCHAR(100) NOT NULL UNIQUE,
+    last_known_balance BIGINT NOT NULL DEFAULT 0, 
+    offline_tx_count INT DEFAULT 0,
+    last_counter BIGINT DEFAULT 0,
+    status VARCHAR(20) DEFAULT 'active', 
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE terminals (
+    id SERIAL PRIMARY KEY,
+    code VARCHAR(20) NOT NULL UNIQUE,
+    name VARCHAR(100) NOT NULL,
+    latitude DOUBLE PRECISION,
+    longitude DOUBLE PRECISION,
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE distance_matrix (
+    id SERIAL PRIMARY KEY,
+    from_terminal_id INT NOT NULL REFERENCES terminals(id) ON DELETE CASCADE,
+    to_terminal_id INT NOT NULL REFERENCES terminals(id) ON DELETE CASCADE,
+    distance_km DOUBLE PRECISION NOT NULL,
+    UNIQUE(from_terminal_id, to_terminal_id)
+);
+
+CREATE TABLE devices (
+    id SERIAL PRIMARY KEY,
+    device_uid VARCHAR(100) NOT NULL UNIQUE,
+    terminal_id INT REFERENCES terminals(id) ON DELETE SET NULL,
+    last_seen TIMESTAMPTZ
+);
+
+CREATE TABLE transactions (
+    id BIGSERIAL PRIMARY KEY,
+    tx_uuid UUID NOT NULL UNIQUE,
+    card_id INT NOT NULL REFERENCES cards(id),
+    checkin_terminal INT REFERENCES terminals(id),
+    checkin_time TIMESTAMPTZ,
+    checkout_terminal INT REFERENCES terminals(id),
+    checkout_time TIMESTAMPTZ,
+    amount_cents BIGINT,
+    status VARCHAR(20), -- CHECKED_IN, COMPLETED, PENDING, EXCEPTION
+    device_id INT REFERENCES devices(id),
+    device_signature TEXT,
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE device_events (
+    id BIGSERIAL PRIMARY KEY,
+    device_id INT REFERENCES devices(id),
+    tx_uuid UUID,
+    event_type VARCHAR(20), -- CHECKIN / CHECKOUT
+    payload JSONB,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    synced BOOLEAN DEFAULT FALSE
+);
+
+CREATE TABLE reconciliation_reports (
+    id BIGSERIAL PRIMARY KEY,
+    transaction_id BIGINT REFERENCES transactions(id),
+    issue TEXT,
+    resolved BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE INDEX idx_transactions_card ON transactions(card_id);
+CREATE INDEX idx_transactions_checkin_time ON transactions(checkin_time);
+CREATE INDEX idx_device_events_device ON device_events(device_id);
